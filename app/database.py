@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # "jdbc:sqlite:/Users/koraypoyraz/PycharmProjects/dataCompressorProject/data/images_db"
