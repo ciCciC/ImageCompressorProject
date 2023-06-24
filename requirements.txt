@@ -5,3 +5,5 @@ pytest
 httpx
 jupyter
 matplotlib
+uvicorn
+python-dotenv

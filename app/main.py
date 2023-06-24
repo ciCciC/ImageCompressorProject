@@ -1,49 +1,33 @@
-from fastapi import Depends, FastAPI, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-from . import crud, models, schemas
-from .database import SessionLocal, engine
+import uvicorn
 
-models.Base.metadata.create_all(bind=engine)
+from app.routers import images as images_router
+from app.core.database import create_db
 
 title = 'ImageCompressorAPI'
-app = FastAPI(title=title)
+app = FastAPI(version='1.0.0', title=title)
+
+app.add_middleware(CORSMiddleware,
+                   allow_origins=['*'],
+                   allow_credentials=True,
+                   allow_methods=["*"],
+                   allow_headers=["*"],
+                   )
+
+app.include_router(images_router.router)
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+@app.on_event("startup")
+def on_startup():
+    create_db()
 
 
 @app.get("/")
-async def root():
-    return {"message": title}
+async def health_check():
+    return {"msg": f"Welcome to {title}, the server is up and running"}
 
 
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
-
-
-@app.get("/images", response_model=list[schemas.Image])
-async def get_images(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    images = crud.get_images(db, skip=skip, limit=limit)
-    return images
-
-
-@app.get("/images/{id}", response_model=schemas.Image)
-async def get_image(id: int, db: Session = Depends(get_db)):
-    db_image = crud.get_image(db, img_id=id)
-
-    if db_image is None:
-        raise HTTPException(status_code=404, detail="Image not found")
-
-    return db_image
-
-
-@app.post("/images", response_model=schemas.Image)
-async def create_image(image: schemas.ImageCreate, db: Session = Depends(get_db)):
-    return crud.create_image(db, image)
+if __name__ == "__main__":
+    uvicorn.run("main:app", log_level="info", reload=True)

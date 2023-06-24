@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from . import models, schemas
+from app.core import schemas, models
 
 
 def get_image(db: Session, img_id: int):
