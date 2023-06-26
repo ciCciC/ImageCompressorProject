@@ -4,11 +4,11 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 import random
 
-from app.main import app
-from app.core.dependencies import get_db
-from app.core.database import Base
-from app.core.settings import DATABASE_TEST_URI
-from app.tests import fake_obj
+from ..main import app
+from ..core.dependencies import get_db
+from ..core.database import Base
+from ..core.settings import DATABASE_TEST_URI
+from ..tests import fake_obj
 
 engine = create_engine(
     DATABASE_TEST_URI,
