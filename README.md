@@ -7,12 +7,18 @@ This repo consist of an Image Compressor system using pretrained Vector Quantize
 - initialize SQLlite data source
 - from root enter the following command line
 ```commandline
- pip install -r requirements.txt
+pip install -r requirements.txt
+```
+```commandline
+pip install python-dotenv
 ```
 
 - **WINDOWS** for CUDA Deep Neural Network
 ```commandline 
 conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
+```
+
+```commandline 
 pip install tensorflow==2.10
 ```
 
@@ -20,6 +26,9 @@ pip install tensorflow==2.10
   - tensorflow [installer](https://developer.apple.com/metal/tensorflow-plugin/) for MPS
 ```commandline 
 conda install -c apple tensorflow-deps
+```
+
+```commandline
 pip install tensorflow-macos==2.10.0 tensorflow-metal==0.6.0
 ```
 

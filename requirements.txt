@@ -8,4 +8,3 @@ matplotlib
 numpy
 pandas
 uvicorn
-python-dotenv
