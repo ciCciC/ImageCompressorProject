@@ -52,8 +52,9 @@ stateDiagram
     Webapp --> IMAGES/id : GET
     IMAGES --> API
     IMAGES/id --> API
-    API --> DBMS : QUERY
-    DBMS --> API : LATENT VARIABLES
-    API --> DecoderModel : INFERENCE
+    API --> STORE : QUERY
+    STORE --> API : LATENT VARIABLES
+    API --> Quantizer : QUANT
+    Quantizer --> DecoderModel : INFERENCE
     DecoderModel --> Webapp : RECONSTRUCTED
 ```
