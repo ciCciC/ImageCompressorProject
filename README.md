@@ -4,16 +4,18 @@
   <img width='50%' src="/asset/angel.png">
 </p>
 
+[EXPERIMENTAL]
+
 This repo consist of an Image Compressor system using pretrained Vector Quantized Variational Autoencoder (VQVAE) developed with Tensorflow (see notebooks dir) and hosted within the framework of FASTapi (see app dir).
 
-Tech
+**Tech**
 - VQVAE
 - VAE Tiny
 
 ## 🚀 Prerequisite
-- install miniforge
-- create virtual env
-- initialize SQLlite data source
+- install [miniforge](https://github.com/conda-forge/miniforge)
+- create virtual env || conda
+- initialize SQLlite || [Qdrant](https://qdrant.tech)
 - from root enter the following command line
 ```commandline
 pip install -r requirements.txt
@@ -22,7 +24,8 @@ pip install -r requirements.txt
 pip install python-dotenv
 ```
 
-- **WINDOWS** for CUDA Deep Neural Network
+### **WINDOWS** for CUDA Deep Neural Network
+- tensorflow
 ```commandline 
 conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
 ```
@@ -31,8 +34,13 @@ conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
 pip install tensorflow==2.10
 ```
 
-- **MACOS** for MPS
-  - tensorflow [installer](https://developer.apple.com/metal/tensorflow-plugin/) for MPS
+- [pytorch](https://pytorch.org/get-started)
+```
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+```
+
+### **MACOS** for MPS
+- tensorflow [installer](https://developer.apple.com/metal/tensorflow-plugin/) for MPS
 ```commandline 
 conda install -c apple tensorflow-deps
 ```
@@ -40,16 +48,18 @@ conda install -c apple tensorflow-deps
 ```commandline
 pip install tensorflow-macos==2.10.0 tensorflow-metal==0.6.0
 ```
-  - pytorch
+
+- [pytorch](https://pytorch.org/get-started)
 ```commandline 
 pip install torch torchvision
 ```
 
-- run application
+### **TODO**
+- app
 ```commandline
 python app/main.py
 ```
-- run test
+- test
 ```commandline
 pytest
 ```
@@ -71,3 +81,7 @@ stateDiagram
     Quantizer --> DecoderModel : INFERENCE
     DecoderModel --> Webapp : RECONSTRUCTED
 ```
+
+# !!Credits
+- [madebyollin](https://github.com/madebyollin)
+- 🤗 [Hugging Face](https://github.com/huggingface)
