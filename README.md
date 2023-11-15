@@ -1,7 +1,16 @@
 # Image Compressor project
+
+<p align='center'>
+  <img width='50%' src="/asset/angel.png">
+</p>
+
 This repo consist of an Image Compressor system using pretrained Vector Quantized Variational Autoencoder (VQVAE) developed with Tensorflow (see notebooks dir) and hosted within the framework of FASTapi (see app dir).
 
-## Prerequisite
+Tech
+- VQVAE
+- VAE Tiny
+
+## 🚀 Prerequisite
 - install miniforge
 - create virtual env
 - initialize SQLlite data source
@@ -31,6 +40,10 @@ conda install -c apple tensorflow-deps
 ```commandline
 pip install tensorflow-macos==2.10.0 tensorflow-metal==0.6.0
 ```
+  - pytorch
+```commandline 
+pip install torch torchvision
+```
 
 - run application
 ```commandline
@@ -41,7 +54,7 @@ python app/main.py
 pytest
 ```
 
-## DOCS
+## 📖 DOCS
 - http://127.0.0.1:8000/docs
 
 ## ARCHITECTURE
