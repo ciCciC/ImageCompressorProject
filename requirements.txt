@@ -1,7 +1,4 @@
-sqlalchemy
 fastapi
-pydantic
-pytest
 httpx
 jupyter
 matplotlib
