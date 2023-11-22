@@ -1,6 +1,6 @@
 from app.core.settings import QDRANT_URL, COLLECTION_NAME, QDRANT_API_KEY
 from qdrant_client import AsyncQdrantClient, models
-from app.networks.compressor import ImageCompressor
+from app.models.compressor import ImageCompressor
 
 
 class NeuralService:

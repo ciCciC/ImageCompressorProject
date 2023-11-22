@@ -5,7 +5,7 @@ import torch
 from PIL import Image
 from typing import List, Tuple
 import math
-from app.networks.base_model import BaseModel
+from app.models.base_model import BaseModel
 
 
 class ImageCompressor(BaseModel):

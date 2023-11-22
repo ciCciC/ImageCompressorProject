@@ -1,6 +1,6 @@
 from settings import QDRANT_URL, COLLECTION_NAME, QDRANT_API_KEY, DATA_DIR
 from qdrant_client import QdrantClient, models
-from app.networks.compressor import ImageCompressor
+from app.models.compressor import ImageCompressor
 from PIL import Image
 from tqdm import tqdm
 import glob

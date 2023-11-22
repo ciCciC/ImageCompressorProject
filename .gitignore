@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 # Pretraining
-models
+models_weight
 
 # C extensions
 *.so
