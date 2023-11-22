@@ -3,7 +3,8 @@ from dotenv import dotenv_values
 
 CODE_DIR = os.path.dirname(__file__)
 ROOT_DIR = os.path.dirname(CODE_DIR)
-DATA_DIR = os.path.join(ROOT_DIR, "data")
+PROJECT_DIR = os.path.dirname(ROOT_DIR)
+DATA_DIR = os.path.join(PROJECT_DIR, "data")
 
 config = {
     **dotenv_values(".env"),
