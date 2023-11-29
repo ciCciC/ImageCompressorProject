@@ -5,6 +5,7 @@ CODE_DIR = os.path.dirname(__file__)
 ROOT_DIR = os.path.dirname(CODE_DIR)
 PROJECT_DIR = os.path.dirname(ROOT_DIR)
 DATA_DIR = os.path.join(PROJECT_DIR, "data")
+MODEL_WEIGHTS_DIR = os.path.join(PROJECT_DIR, "models_weight")
 
 config = {
     **dotenv_values(".env"),

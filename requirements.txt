@@ -1,9 +1,8 @@
 fastapi
-httpx
 jupyter
 matplotlib
 numpy
-pandas
+python-dotenv
 uvicorn
 tokenizers==0.14.1
 requests==2.31.0
@@ -15,3 +14,4 @@ diffusers==0.23
 pillow==10.1.0
 accelerate
 qdrant-client
+streamlit

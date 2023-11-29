@@ -1,31 +1,55 @@
-from diffusers import DiffusionPipeline, LCMScheduler, StableDiffusionUpscalePipeline, UniPCMultistepScheduler, \
-    AutoencoderTiny
-from torchvision.transforms.functional import pil_to_tensor, to_pil_image, center_crop, resize, to_tensor
-import torch
-from typing import List
-from base_model import BaseModel
+from diffusers import DiffusionPipeline, LCMScheduler
+from typing import List, Tuple
+from app.models.base_model import BaseModel
 from PIL import Image
+from app.core.settings import MODEL_WEIGHTS_DIR
 
 
 class ImageGenerator(BaseModel):
 
     def __init__(self):
         super().__init__()
-        self.model_id = 'Lykon/dreamshaper-7'
+        self.model_id = f'{MODEL_WEIGHTS_DIR}/dreamshaper-7'
 
     def load_model(self):
         self._model = DiffusionPipeline.from_pretrained(self.model_id,
-                                                        torch_dtype=self._d_type,
+                                                        torch_dtype=self.d_type,
                                                         use_safetensors=True)
 
-    def optimize(self):
+        self._optimize()
+
+    def _optimize(self):
         self._model.scheduler = LCMScheduler.from_config(self._model.scheduler.config)
         self._model.enable_attention_slicing()
+
+        self._model = self._model.to(self._device)
+
         self._model.load_lora_weights("latent-consistency/lcm-lora-sdv1-5")
         self._model.fuse_lora()
 
-    def inference(self, prompt: str):
-        pass
+    def inference(self, prompt: str) -> Tuple[List[Image.Image], bool]:
+        results = self._model(
+            prompt=prompt,
+            num_inference_steps=4,
+            guidance_scale=0.0,
+        )
 
-    def multi_inference(self, prompts: List[str]):
-        pass
+        is_nsfw: bool = results.nsfw_content_detected[0]
+        image: List[Image.Image] = results.images
+
+        return image, is_nsfw
+
+    def multi_inference(self, prompts: List[str]) -> Tuple[List[Image.Image], List[bool]]:
+        images: List[Image.Image] = []
+        nsfws: List[bool] = []
+
+        for prompt in prompts:
+            result = self._model(
+                prompt=prompt,
+                num_inference_steps=4,
+                guidance_scale=0.0,
+            )
+            images.append(result.images[0])
+            nsfws.append(result.nsfw_content_detected[0])
+
+        return images, nsfws

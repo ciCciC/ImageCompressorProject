@@ -4,24 +4,43 @@ from app.models.compressor import ImageCompressor
 from PIL import Image
 from tqdm import tqdm
 import glob
-from typing import List
+from typing import List, Tuple
 
 
-def get_data(dir_name) -> List[Image.Image]:
-    return [Image.open(img_path) for img_path in glob.glob(DATA_DIR + f'/{dir_name}/*')]
+def get_paths(dir_name: str) -> List[str]:
+    return [img_path for img_path in glob.glob(DATA_DIR + f'/{dir_name}/*')]
 
 
-def upload_vectors(client: QdrantClient, compressor: ImageCompressor, images: List[Image.Image]):
-    client.upload_records(
-        collection_name=COLLECTION_NAME,
-        records=[
+def get_data(paths: List[str]) -> List[Image.Image]:
+    return [Image.open(img_path) for img_path in paths]
+
+
+def to_image_latent(compressor: ImageCompressor, image: Image.Image) -> Tuple[List, List]:
+    latents_tensor, tensor_size = compressor.compress([image])
+    mu = latents_tensor[0].mean(dim=1).flatten().numpy(force=True)
+    vectorized = compressor.vector_ndarray(latents_tensor[0])
+    return mu.tolist(), vectorized.tolist()
+
+
+def upload_vectors(client: QdrantClient, compressor: ImageCompressor, images: List[Image.Image], paths: List[str]):
+    records = []
+
+    for idx, image in enumerate(tqdm(images)):
+        mu, vectorized = to_image_latent(compressor, image)
+        records.append(
             models.Record(
                 id=idx,
-                vector=compressor.vector_ndarray(compressor.compress([image])[0]).tolist(),
-                payload={'dims': compressor.get_latent_dims()}
+                vector=mu,
+                payload={
+                    'name': paths[idx],
+                    'latents': vectorized
+                }
             )
-            for idx, image in enumerate(tqdm(images))
-        ],
+        )
+
+    client.upload_records(
+        collection_name=COLLECTION_NAME,
+        records=records,
     )
 
 
@@ -42,12 +61,13 @@ def populate():
         api_key=QDRANT_API_KEY,
     )
 
-    images = get_data('dream')
+    paths = get_paths('dream')
+    images = get_data(paths)
     compressor = ImageCompressor()
     compressor.load_model()
 
     create_collection(client, compressor)
-    upload_vectors(client, compressor, images)
+    upload_vectors(client, compressor, images, paths)
 
 
 if __name__ == '__main__':
