@@ -6,16 +6,27 @@
 
 [EXPERIMENTAL]
 
-This repo consist of an Image Compressor system using pretrained Vector Quantized Variational Autoencoder (VQVAE) developed with Tensorflow (see notebooks dir) and hosted within the framework of FASTapi (see app dir).
+This repo consist of an Image Compressor system using pretrained Vector Quantized Variational Autoencoder (VQVAE) developed with Tensorflow (see notebooks) and hosted within the framework of FASTapi.
 
-**Tech**
-- VQVAE
-- VAE Tiny
+**Stack**
+- Models
+  - VQVAE: pretraining
+  - VAE Tiny: madebyollin/taesd
+  - Stable Diffusion: Lykon/dreamshaper-7
+- Optimization
+  - Attention Slicing
+  - LCM LoRa: latent-consistency/lcm-lora-sdv1-5
+  - Fuse LoRa
+
+### Preview
+<p align='center'>
+  <img width='50%' src="/asset/astronaut.png">
+</p>
 
 ## 🚀 Prerequisite
 - install [miniforge](https://github.com/conda-forge/miniforge)
 - create virtual env || conda
-- initialize SQLlite || [Qdrant](https://qdrant.tech)
+- initialize [Qdrant](https://qdrant.tech)
 - from root enter the following command line
 ```commandline
 pip install -r requirements.txt
@@ -68,19 +79,7 @@ pytest
 - http://127.0.0.1:8000/docs
 
 ## ARCHITECTURE
-```mermaid
-stateDiagram
-    [*] --> Webapp
-    Webapp --> IMAGES : GET
-    Webapp --> IMAGES/id : GET
-    IMAGES --> API
-    IMAGES/id --> API
-    API --> STORE : QUERY
-    STORE --> API : LATENT VARIABLES
-    API --> Quantizer : QUANT
-    Quantizer --> DecoderModel : INFERENCE
-    DecoderModel --> Webapp : RECONSTRUCTED
-```
+
 
 # !!Credits
 - [madebyollin](https://github.com/madebyollin)
