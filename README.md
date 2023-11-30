@@ -1,4 +1,5 @@
-# ⚡ Image Compressor project
+# ⚡ Image to Latents Representation
+### A compression towards Latent Space
 
 <p align='center'>
   <img width='50%' src="/asset/angel.png">

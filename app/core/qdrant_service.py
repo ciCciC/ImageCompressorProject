@@ -13,3 +13,10 @@ class QdrantService:
 
     async def get_latents(self, idx: int):
         return await self.qdrant_client.retrieve(COLLECTION_NAME, ids=[idx], with_vectors=True)
+
+    async def search(self, mu, limit=5):
+        return await self.qdrant_client.search(
+            collection_name=COLLECTION_NAME,
+            query_vector=mu,
+            limit=limit
+        )

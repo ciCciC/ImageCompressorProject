@@ -54,6 +54,11 @@ class ImageCompressor(BaseModel):
         reconstructed = self._model.decoder(dim_shift_gpu).clamp(0, 1)
         return to_pil_image(reconstructed[0])
 
+    def decompress_batch(self, latent_space_block: List) -> torch.Tensor:
+        dimensionalized_block = [self.dimensionalize(latent_vector) for latent_vector in latent_space_block]
+        reconstructed_block = self._model.decoder(dimensionalized_block).clamp(0, 1)
+        return reconstructed_block
+
     def depict_latents(self, latent_vector: List) -> Image.Image:
         dim_shift_gpu = self.dimensionalize(latent_vector)
         latent_representation = Image.fromarray(

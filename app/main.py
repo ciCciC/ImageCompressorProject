@@ -17,6 +17,11 @@ qdrant_service = QdrantService()
 neural_service = NeuralService()
 
 
+@app.post("/latents/search/")
+async def search(mu):
+    return await qdrant_service.search(mu)
+
+
 @app.get("/latents")
 async def get_latents():
     return await qdrant_service.get_all_latents()
