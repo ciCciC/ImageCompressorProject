@@ -1,4 +1,4 @@
-# Image Compressor project
+# ⚡ Image Compressor project
 
 <p align='center'>
   <img width='50%' src="/asset/angel.png">
