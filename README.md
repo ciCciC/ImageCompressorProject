@@ -41,13 +41,13 @@ pip install python-dotenv
 conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
 ```
 
-```commandline 
+```commandline
 pip install tensorflow==2.10
 ```
 
 - [pytorch](https://pytorch.org/get-started)
-```
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+```commandline
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
 ```
 
 ### **MACOS** for MPS
@@ -65,15 +65,16 @@ pip install tensorflow-macos==2.10.0 tensorflow-metal==0.6.0
 pip install torch torchvision
 ```
 
-### **TODO**
 - app
 ```commandline
 python app/main.py
 ```
-- test
+
+- webapp
 ```commandline
-pytest
+streamlit run webapp.py
 ```
+
 
 ## 📖 DOCS
 - http://127.0.0.1:8000/docs
