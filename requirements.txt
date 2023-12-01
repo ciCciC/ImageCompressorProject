@@ -9,9 +9,9 @@ requests==2.31.0
 datasets==2.14.6
 tqdm==4.66.1
 transformers==4.35.1
-setuptools==68.2.2
+setuptools==69.0.2
 diffusers==0.23
 pillow==10.1.0
 accelerate
 qdrant-client
-streamlit
+streamlit==1.29.0

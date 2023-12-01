@@ -7,7 +7,7 @@
 
 [EXPERIMENTAL]
 
-This repo consist of an Image Compressor system using pretrained Vector Quantized Variational Autoencoder (VQVAE) developed with Tensorflow (see notebooks) and hosted within the framework of FASTapi.
+This repo consist of an Image Compressor system using pretrained Vector Quantized Variational Autoencoder (VQVAE) developed with Tensorflow (see notebooks).
 
 **Stack**
 - Models

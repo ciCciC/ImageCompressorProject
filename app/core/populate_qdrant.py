@@ -48,7 +48,7 @@ def create_collection(client: QdrantClient, compressor: ImageCompressor):
     client.recreate_collection(
         collection_name=COLLECTION_NAME,
         vectors_config=models.VectorParams(
-            size=compressor.get_latent_flat_size(),
+            size=compressor.get_latent_mu_size(),
             distance=models.Distance.COSINE,
             on_disk=True
         )

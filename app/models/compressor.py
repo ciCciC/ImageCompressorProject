@@ -12,17 +12,15 @@ class ImageCompressor(BaseModel):
     def __init__(self):
         super().__init__()
 
-        if self._device in ['mps']:
-            self.d_type = torch.float32
-
         self._latent_dims = (4, 64, 64)
         self._max_dim = 512
+        self._np_d_type = np.float16
         self.model_id = 'madebyollin/taesd'
 
     def get_latent_dims(self):
         return self._latent_dims
 
-    def get_latent_flat_size(self):
+    def get_latent_mu_size(self):
         return math.prod(self._latent_dims[:2])
 
     def load_model(self):
@@ -34,7 +32,9 @@ class ImageCompressor(BaseModel):
         return self._model
 
     def compress(self, raw_images: List[Image.Image]) -> Tuple[torch.Tensor, torch.Size]:
-        tensor_block = torch.stack([to_tensor(self.preprocess(img)) for img in raw_images]).to(self._device)
+        tensor_block = (torch.stack([to_tensor(self.preprocess(img)) for img in raw_images])
+                        .to(self._device, dtype=self.d_type))
+
         latent_space = self._model.encoder(tensor_block)
         return latent_space, latent_space.shape
 
@@ -42,21 +42,23 @@ class ImageCompressor(BaseModel):
         return resize(raw_image, self._max_dim)
 
     def vector_ndarray(self, latent_tensor: torch.Tensor) -> np.ndarray:
-        return latent_tensor.flatten().numpy(force=True).astype(np.float32)
+        return latent_tensor.flatten().numpy(force=True).astype(self._np_d_type)
 
     def dimensionalize(self, latent_vector: List) -> torch.Tensor:
-        reshaped = np.array(latent_vector, dtype=np.float32).reshape(self._latent_dims)
+        reshaped = np.array(latent_vector, dtype=self._np_d_type).reshape(self._latent_dims)
         dim_shift = to_tensor(reshaped).movedim(0, -1).unsqueeze(0)
         return dim_shift
 
     def decompress(self, latent_vector: List) -> Image.Image:
-        dim_shift_gpu = self.dimensionalize(latent_vector).to(self._device)
+        dim_shift_gpu = self.dimensionalize(latent_vector).to(self._device, dtype=self.d_type)
         reconstructed = self._model.decoder(dim_shift_gpu).clamp(0, 1)
         return to_pil_image(reconstructed[0])
 
     def decompress_batch(self, latent_space_block: List) -> torch.Tensor:
-        dimensionalized_block = torch.stack(
-            [self.dimensionalize(latent_vector)[0] for latent_vector in latent_space_block]).to(self._device)
+        dimensionalized_block = (torch.stack(
+            [self.dimensionalize(latent_vector)[0] for latent_vector in latent_space_block])
+                                 .to(self._device, dtype=self.d_type))
+
         reconstructed_block = self._model.decoder(dimensionalized_block).clamp(0, 1)
         return reconstructed_block
 

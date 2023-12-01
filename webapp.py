@@ -102,7 +102,8 @@ def web_app_similar():
 
             st.write(f"Elapsed time: {duration.microseconds / 1e3}ms")
             st.write(f"Reconstruction time: {s_r_s - r_s}s")
+            st.write(f"Reconstruction dimensions: 512x512")
 
 
 if __name__ == '__main__':
-    web_app()
+    web_app_similar()
