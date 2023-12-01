@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from core.qdrant_service import QdrantService
 from core.neural_service import NeuralService
@@ -17,9 +18,13 @@ qdrant_service = QdrantService()
 neural_service = NeuralService()
 
 
-@app.post("/latents/search/")
-async def search(mu):
-    return await qdrant_service.search(mu)
+class Latents(BaseModel):
+    mu: list
+
+
+@app.post("/latents/search")
+async def search(latents: Latents):
+    return await qdrant_service.search(latents.mu)
 
 
 @app.get("/latents")
@@ -50,4 +55,4 @@ async def health_check():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+    uvicorn.run(f"{__name__}:app", host="0.0.0.0", port=8000, log_level="info")

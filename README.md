@@ -24,6 +24,10 @@ This repo consist of an Image Compressor system using pretrained Vector Quantize
   <img width='50%' src="/asset/astronaut.png">
 </p>
 
+<p align='center'>
+  <img width='50%' src="/asset/similar_latents.png">
+</p>
+
 ## 🚀 Prerequisite
 - install [miniforge](https://github.com/conda-forge/miniforge)
 - create virtual env || conda

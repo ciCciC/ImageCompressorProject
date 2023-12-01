@@ -47,15 +47,16 @@ class ImageCompressor(BaseModel):
     def dimensionalize(self, latent_vector: List) -> torch.Tensor:
         reshaped = np.array(latent_vector, dtype=np.float32).reshape(self._latent_dims)
         dim_shift = to_tensor(reshaped).movedim(0, -1).unsqueeze(0)
-        return dim_shift.to(self._device)
+        return dim_shift
 
     def decompress(self, latent_vector: List) -> Image.Image:
-        dim_shift_gpu = self.dimensionalize(latent_vector)
+        dim_shift_gpu = self.dimensionalize(latent_vector).to(self._device)
         reconstructed = self._model.decoder(dim_shift_gpu).clamp(0, 1)
         return to_pil_image(reconstructed[0])
 
     def decompress_batch(self, latent_space_block: List) -> torch.Tensor:
-        dimensionalized_block = [self.dimensionalize(latent_vector) for latent_vector in latent_space_block]
+        dimensionalized_block = torch.stack(
+            [self.dimensionalize(latent_vector)[0] for latent_vector in latent_space_block]).to(self._device)
         reconstructed_block = self._model.decoder(dimensionalized_block).clamp(0, 1)
         return reconstructed_block
 
