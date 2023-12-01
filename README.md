@@ -1,4 +1,4 @@
-# ⚡ Image to Latents Representation
+# ⚡ Image to Latent Representations
 ### A compression towards Latent Space
 
 <p align='center'>
@@ -7,11 +7,11 @@
 
 [EXPERIMENTAL]
 
-This repo consist of an Image Compressor system using pretrained Vector Quantized Variational Autoencoder (VQVAE) developed with Tensorflow (see notebooks).
+A world of compression without original images, latent representations is all you need. 
 
 **Stack**
 - Models
-  - VQVAE: pretraining
+  - VQVAE: pretraining (see notebooks)
   - VAE Tiny: madebyollin/taesd
   - Stable Diffusion: Lykon/dreamshaper-7
 - Optimization
