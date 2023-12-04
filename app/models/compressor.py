@@ -25,7 +25,9 @@ class ImageCompressor(BaseModel):
 
     def load_model(self):
         self._model = (AutoencoderTiny
-                       .from_pretrained(self.model_id, torch_dtype=self.d_type)
+                       .from_pretrained(self.model_id,
+                                        torch_dtype=self.d_type,
+                                        use_safetensors=True)
                        .to(self._device))
 
     def get_model(self):
