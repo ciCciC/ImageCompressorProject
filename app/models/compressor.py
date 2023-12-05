@@ -14,7 +14,7 @@ class ImageCompressor(BaseModel):
 
         self._latent_dims = (4, 64, 64)
         self._max_dim = 512
-        self._np_d_type = np.float16
+        self._np_d_type = np.uint8
         self.model_id = 'madebyollin/taesd'
 
     def get_latent_dims(self):
@@ -47,7 +47,7 @@ class ImageCompressor(BaseModel):
         return scaled_latents
 
     def unscale_latents(self, latents: torch.Tensor) -> torch.Tensor:
-        """1,4,64^2 <-> 1,4,64^2 to float16"""
+        """float16 1,4,64^2 <-> 1,4,64^2 to float16"""
         unscaled_latents = self._model.unscale_latents(latents)
         return unscaled_latents
 
@@ -58,6 +58,7 @@ class ImageCompressor(BaseModel):
         return latent_tensor.flatten().numpy(force=True).astype(self._np_d_type)
 
     def dimensionalize(self, latent_vector: List) -> torch.Tensor:
+        """uint8 to float16"""
         reshaped = np.array(latent_vector, dtype=self._np_d_type).reshape(self._latent_dims)
         dim_shift = to_tensor(reshaped).movedim(0, -1).unsqueeze(0)
         return dim_shift
@@ -65,7 +66,8 @@ class ImageCompressor(BaseModel):
     @torch.no_grad()
     def decompress(self, latent_vector: List) -> Image.Image:
         dim_shift_gpu = self.dimensionalize(latent_vector).to(self._device, dtype=self.d_type)
-        reconstructed = self._model.decoder(dim_shift_gpu).clamp(0, 1)
+        unscaled_latents = self._model.unscale_latents(dim_shift_gpu)
+        reconstructed = self._model.decoder(unscaled_latents).clamp(0, 1)
         return to_pil_image(reconstructed[0])
 
     @torch.no_grad()
@@ -74,17 +76,11 @@ class ImageCompressor(BaseModel):
             [self.dimensionalize(latent_vector)[0] for latent_vector in latent_space_block])
                                  .to(self._device, dtype=self.d_type))
 
-        reconstructed_block = self._model.decoder(dimensionalized_block).clamp(0, 1)
+        unscaled_block = self._model.unscale_latents(dimensionalized_block)
+
+        reconstructed_block = self._model.decoder(unscaled_block).clamp(0, 1)
         return reconstructed_block
 
     def depict_latents(self, latent_vector: List) -> Image.Image:
-        dim_shift_gpu = self.dimensionalize(latent_vector)
-        latent_representation = Image.fromarray(
-            dim_shift_gpu[0, :3].mul(0.25)
-            .add(0.5)
-            .clamp(0, 1)
-            .mul(255).round().byte()
-            .permute(1, 2, 0)
-            .cpu().numpy())
-
-        return latent_representation
+        dim_shift_gpu = self.dimensionalize(latent_vector).to(dtype=self.d_type)
+        return to_pil_image(dim_shift_gpu[0])

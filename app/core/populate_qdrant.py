@@ -18,7 +18,8 @@ def get_data(paths: List[str]) -> List[Image.Image]:
 def to_image_latent(compressor: ImageCompressor, image: Image.Image) -> Tuple[List, List]:
     latents_tensor, tensor_size = compressor.compress([image])
     mu = latents_tensor[0].mean(dim=1).flatten().numpy(force=True)
-    vectorized = compressor.vector_ndarray(latents_tensor[0])
+    scaled_latents = compressor.scale_latents(latents_tensor)
+    vectorized = compressor.vector_ndarray(scaled_latents[0])
     return mu.tolist(), vectorized.tolist()
 
 
