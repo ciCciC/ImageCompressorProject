@@ -3,6 +3,12 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from core.qdrant_service import QdrantService
 from core.neural_service import NeuralService
+import logging
+
+
+logging.basicConfig(format="%(levelname)s:  %(message)s", level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 title = 'Image Compressor API'
 app = FastAPI(version='1.0.0', title=title)
@@ -24,16 +30,19 @@ class Latents(BaseModel):
 
 @app.post("/latents/search")
 async def search(latents: Latents):
+    logger.info('search latents')
     return await qdrant_service.search(latents.mu)
 
 
 @app.get("/latents")
 async def get_latents():
+    logger.info('get_latents')
     return await qdrant_service.get_all_latents()
 
 
 @app.get("/latents/{idx}")
 async def get_latents(idx: int):
+    logger.info('get_latents idx')
     return await qdrant_service.get_latents(idx)
 
 

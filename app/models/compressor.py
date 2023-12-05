@@ -33,12 +33,23 @@ class ImageCompressor(BaseModel):
     def get_model(self):
         return self._model
 
+    @torch.no_grad()
     def compress(self, raw_images: List[Image.Image]) -> Tuple[torch.Tensor, torch.Size]:
         tensor_block = (torch.stack([to_tensor(self.preprocess(img)) for img in raw_images])
                         .to(self._device, dtype=self.d_type))
 
         latent_space = self._model.encoder(tensor_block)
         return latent_space, latent_space.shape
+
+    def scale_latents(self, latents: torch.Tensor) -> torch.Tensor:
+        """float16 1,4,64^2 <-> 1,4,64^2 to uint8"""
+        scaled_latents = self._model.scale_latents(latents).mul_(255).round_().byte()
+        return scaled_latents
+
+    def unscale_latents(self, latents: torch.Tensor) -> torch.Tensor:
+        """1,4,64^2 <-> 1,4,64^2 to float16"""
+        unscaled_latents = self._model.unscale_latents(latents)
+        return unscaled_latents
 
     def preprocess(self, raw_image: Image.Image) -> Image.Image:
         return resize(raw_image, self._max_dim)
@@ -51,11 +62,13 @@ class ImageCompressor(BaseModel):
         dim_shift = to_tensor(reshaped).movedim(0, -1).unsqueeze(0)
         return dim_shift
 
+    @torch.no_grad()
     def decompress(self, latent_vector: List) -> Image.Image:
         dim_shift_gpu = self.dimensionalize(latent_vector).to(self._device, dtype=self.d_type)
         reconstructed = self._model.decoder(dim_shift_gpu).clamp(0, 1)
         return to_pil_image(reconstructed[0])
 
+    @torch.no_grad()
     def decompress_batch(self, latent_space_block: List) -> torch.Tensor:
         dimensionalized_block = (torch.stack(
             [self.dimensionalize(latent_vector)[0] for latent_vector in latent_space_block])

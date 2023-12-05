@@ -1,3 +1,4 @@
+import torch
 from diffusers import DiffusionPipeline, LCMScheduler
 from typing import List, Tuple
 from app.models.base_model import BaseModel
@@ -27,6 +28,7 @@ class ImageGenerator(BaseModel):
         self._model.load_lora_weights("latent-consistency/lcm-lora-sdv1-5")
         self._model.fuse_lora()
 
+    @torch.no_grad()
     def inference(self, prompt: str) -> Tuple[List[Image.Image], bool]:
         results = self._model(
             prompt=prompt,
@@ -39,6 +41,7 @@ class ImageGenerator(BaseModel):
 
         return image, is_nsfw
 
+    @torch.no_grad()
     def multi_inference(self, prompts: List[str]) -> Tuple[List[Image.Image], List[bool]]:
         images: List[Image.Image] = []
         nsfws: List[bool] = []

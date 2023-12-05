@@ -106,4 +106,4 @@ def web_app_similar():
 
 
 if __name__ == '__main__':
-    web_app_similar()
+    web_app()
