@@ -1,4 +1,4 @@
-# ⚡ Image to Latent Representations
+# ⚡ Images to Latent Space Representations
 
 <p align='center'>
   <img width='50%' src="/asset/angel.png">
