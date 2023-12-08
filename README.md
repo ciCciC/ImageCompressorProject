@@ -12,16 +12,12 @@ In a world of compression without storing original images, latent space represen
 
 - Models
     - VQVAE: pretraining (see notebooks)
-    - VAE Tiny: madebyollin/taesd
-    - Stable Diffusion: Lykon/dreamshaper-7
-- Optimization [Stable Diffusion]
-    - Attention Slicing
-    - LCM LoRa: latent-consistency/lcm-lora-sdv1-5
-    - Fuse LoRa
+    - VAE Tiny: madebyollin/taesd (in use)
 - Flavour
     - 8bit latent space
 
-### Hugging Face Spaces 🤗
+### 🤗 Hugging Face Spaces
+
 - 🖼 [Image Encoder](https://huggingface.co/spaces/ciCic/ImageEncoder)
 - 🔢 [Latents Decoder](https://huggingface.co/spaces/ciCic/latents-decoder)
 
@@ -42,15 +38,22 @@ In a world of compression without storing original images, latent space represen
 | Originals | 99   | 0.299  | 0.338  | 0.376  | 33.631 |
 | Latents   | 99   | 0.0127 | 0.0131 | 0.0134 | 1.294  |
 
-| Elapsed time (ms)                            | µ      | m      | σ     | min    | max     | 1 run    |
-|----------------------------------------------|--------|--------|-------|--------|---------|----------|
-| Originals, file store (1)                    | 1.856  | 1.761  | 0.889 | 1.037  | 8.913   | -        |
-| Originals, file store (99)                   | -      | -      | -     | -      | -       | 195.232  |
-| Latents, file store (1)                      | 1.255  | 1.125  | 0.418 | 0.99   | 3.961   | -        |
-| Latents with reconstruction, file store (1)  | -      | -      | -     | -      | -       | 40.559   |
-| Latents with reconstruction, file store (99) | -      | -      | -     | -      | -       | 2522.841 |
-| Latents, vector database (1)                 | 63.007 | 63.717 | 8.502 | 42.864 | 104.509 | -        |
-| Latents, vector database (99)                | -      | -      | -     | -      | -       | 4189     |
+- vd = vector database
+- fs = file storage
+- r = reconstruction
+- () = n elements
+
+| Elapsed time (ms)                                | µ      | m      | σ     | min    | max     | 1 run                 |
+|--------------------------------------------------|--------|--------|-------|--------|---------|-----------------------|
+| Originals, fs (1)                                | 1.856  | 1.761  | 0.889 | 1.037  | 8.913   | -                     |
+| Originals, fs (99)                               | -      | -      | -     | -      | -       | 195.232               |
+| Latents, fs (1)                                  | 1.255  | 1.125  | 0.418 | 0.99   | 3.961   | -                     |
+| Latents with r, fs (1)                           | -      | -      | -     | -      | -       | 40.559                |
+| Latents with r, fs (99)                          | -      | -      | -     | -      | -       | 2522.841              |
+| Latents as payload, vd (1)                       | 63.007 | 63.717 | 8.502 | 42.864 | 104.509 | -                     |
+| Latents as payload, vd (99)                      | -      | -      | -     | -      | -       | 4189                  |
+| Search with latents as payload + r, vd (topk=5)  | -      | -      | -     | -      | -       | 235.427 + 425.043     |
+| Search with filename as payload + r, vd (topk=5) | -      | -      | -     | -      | -       | 15.473   +    210.832 |
 
 ## 🚀 Prerequisite
 
@@ -118,8 +121,6 @@ streamlit run webapp.py
 ## 📖 DOCS
 
 - http://127.0.0.1:8000/docs
-
-## ARCHITECTURE
 
 # !!Credits
 

@@ -71,12 +71,29 @@ class ImageCompressor(BaseModel):
         return to_pil_image(reconstructed[0])
 
     @torch.no_grad()
+    def decompress_by_image(self, image: Image.Image) -> Image.Image:
+        tensor = to_tensor(image).unsqueeze(0).to(self._device, dtype=self.d_type)
+        unscaled_latents = self._model.unscale_latents(tensor)
+        reconstructed = self._model.decoder(unscaled_latents).clamp(0, 1)
+        return to_pil_image(reconstructed[0])
+
+    @torch.no_grad()
     def decompress_batch(self, latent_space_block: List) -> torch.Tensor:
         dimensionalized_block = (torch.stack(
             [self.dimensionalize(latent_vector)[0] for latent_vector in latent_space_block])
                                  .to(self._device, dtype=self.d_type))
 
         unscaled_block = self._model.unscale_latents(dimensionalized_block)
+
+        reconstructed_block = self._model.decoder(unscaled_block).clamp(0, 1)
+        return reconstructed_block
+
+    @torch.no_grad()
+    def decompress_batch_by_image(self, images: List[Image.Image]) -> torch.Tensor:
+        tensor_block = (torch.stack([to_tensor(image) for image in images])
+                        .to(self._device, dtype=self.d_type))
+
+        unscaled_block = self._model.unscale_latents(tensor_block)
 
         reconstructed_block = self._model.decoder(unscaled_block).clamp(0, 1)
         return reconstructed_block
