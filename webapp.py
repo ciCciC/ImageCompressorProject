@@ -1,6 +1,6 @@
 import streamlit as st
 
-from app.models import ImageCompressor
+from app.models import ImageCompressor, FacebookDinoV2
 from torchvision.transforms.functional import to_pil_image
 import requests
 from timeit import default_timer as timer
@@ -9,6 +9,9 @@ from PIL import Image
 
 image_compressor = ImageCompressor()
 image_compressor.load_model()
+
+dino_model = FacebookDinoV2()
+dino_model.load_model()
 
 BASE_URL = "http://localhost:8000"
 
@@ -89,6 +92,8 @@ def web_app():
     latent_idx = st.text_input('Latent idx')
 
     if latent_idx and latent_idx.isdigit():
+        original_image = Image.open(requests.get(f"{BASE_URL}/dream/{latent_idx}.png", stream=True).raw)
+
         o_s = timer()
         r_s = timer()
         vector, image, depiction, elapsed_time = get_reconstructed_latents(latent_idx)
@@ -97,9 +102,14 @@ def web_app():
                  clamp=True)
         s_o_s = timer()
 
-        st.write(f"Elapsed time: {elapsed_time.total_seconds() * 1e3}ms")
-        st.write(f"Reconstruction time: {s_r_s - r_s}s")
-        st.write(f'Overall time: {s_o_s - o_s}s')
+        st.write("Elapsed time (ms)", elapsed_time.total_seconds() * 1e3)
+        st.write("Reconstruction time (s)", s_r_s - r_s)
+        st.write('Overall time (s)', s_o_s - o_s)
+
+        embeddings = dino_model.get_embeddings([original_image, image])
+        cosine_score = dino_model.compute_similarity(embeddings)
+
+        st.write('Cosine(original, reconstruction)', cosine_score)
 
 
 def web_app_similar():
@@ -134,6 +144,8 @@ def web_app_file_store():
     latent_idx = st.text_input('Latent idx')
 
     if latent_idx and latent_idx.isdigit():
+        original_image = Image.open(requests.get(f"{BASE_URL}/dream/{latent_idx}.png", stream=True).raw)
+
         o_s = timer()
         r_s = timer()
 
@@ -145,9 +157,14 @@ def web_app_file_store():
                  clamp=True)
         s_o_s = timer()
 
-        st.write(f"Elapsed time: {elapsed_time.total_seconds() * 1e3}ms")
-        st.write(f"Reconstruction time: {s_r_s - r_s}s")
-        st.write(f'Overall time: {s_o_s - o_s}s')
+        st.write("Elapsed time (ms)", elapsed_time.total_seconds() * 1e3)
+        st.write("Reconstruction time (s)", s_r_s - r_s)
+        st.write('Overall time (s)', s_o_s - o_s)
+
+        embeddings = dino_model.get_embeddings([original_image, reconstruction])
+        cosine_score = dino_model.compute_similarity(embeddings)
+
+        st.write('Cosine(original, reconstruction)', cosine_score)
 
 
 def web_app_file_store_similar():
@@ -180,7 +197,7 @@ def web_app_file_store_similar():
 
 
 if __name__ == '__main__':
-    # web_app_similar()
-    web_app_file_store_similar()
     # web_app()
-    # web_app_file_store()
+    web_app_file_store()
+    # web_app_similar()
+    # web_app_file_store_similar()

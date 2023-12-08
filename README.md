@@ -12,9 +12,14 @@ In a world of compression without storing original images, latent space represen
 
 - Models
     - VQVAE: pretraining (see notebooks)
-    - VAE Tiny: madebyollin/taesd (in use)
+    - VAE Tiny: madebyollin/taesd
+      - model size: 2.4M params
 - Flavour
     - 8bit latent space
+- Similarity
+  - Vision Transformer: facebook/dinov2-base
+    - model size: 86.6M params
+  - Cosine
 
 ### 🤗 Hugging Face Spaces
 

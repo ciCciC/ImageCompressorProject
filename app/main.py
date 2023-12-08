@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 title = 'Image Compressor API'
 app = FastAPI(version='1.0.0', title=title)
 
-# app.mount('/data', StaticFiles(directory=DATA_DIR + '/dream'), name="encoded")
+app.mount('/dream', StaticFiles(directory=DATA_DIR + '/dream'), name="dream")
 app.mount('/data', StaticFiles(directory=DATA_DIR + '/compressed'), name="encoded")
 
 app.add_middleware(CORSMiddleware,

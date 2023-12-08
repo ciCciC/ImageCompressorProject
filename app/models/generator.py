@@ -23,7 +23,7 @@ class ImageGenerator(BaseModel):
         self._model.scheduler = LCMScheduler.from_config(self._model.scheduler.config)
         self._model.enable_attention_slicing()
 
-        self._model = self._model.to(self._device)
+        self._model = self._model.to(self.device)
 
         self._model.load_lora_weights("latent-consistency/lcm-lora-sdv1-5")
         self._model.fuse_lora()
