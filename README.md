@@ -1,7 +1,5 @@
 # ⚡ Image to Latent Representations
 
-### A compression towards Latent Space
-
 <p align='center'>
   <img width='50%' src="/asset/angel.png">
 </p>
@@ -22,6 +20,10 @@ In a world of compression without storing original images, latent space represen
     - Fuse LoRa
 - Flavour
     - 8bit latent space
+
+### Hugging Face Spaces 🤗
+- 🖼 [Image Encoder](https://huggingface.co/spaces/ciCic/ImageEncoder)
+- 🔢 [Latents Decoder](https://huggingface.co/spaces/ciCic/latents-decoder)
 
 ### Preview
 
