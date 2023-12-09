@@ -16,7 +16,7 @@ dino_model.load_model()
 BASE_URL = "http://localhost:8000"
 
 st.write("""
-    # Compression towards Latent Space
+    # Compression as Latent Space Representations
     """)
 
 
@@ -31,7 +31,7 @@ def inference(prompt: str):
     return reconstruction, depiction, response.elapsed
 
 
-def get_reconstructed_latents(idx: int = None):
+def get_reconstructed_latents(idx: int):
     response: requests.Response = requests.get(f'{BASE_URL}/latents/{idx}')
     body = response.json()[0]
     latents = body['payload']['latents']
@@ -84,8 +84,8 @@ def web_app_prompting():
         st.image([image, depiction], caption=[f'Reconstruction: {image.size}', f'Latents: {depiction.size}'],
                  clamp=True)
 
-        st.write(f"Elapsed time: {elapsed_time.total_seconds() * 1e3}ms")
-        st.write(f'Overall time: {end - start}s')
+        st.write(f"Elapsed time (ms)", elapsed_time.total_seconds() * 1e3)
+        st.write(f'Overall time (s)', end - start)
 
 
 def web_app():
@@ -135,8 +135,8 @@ def web_app_similar():
                     score = scores[idx]
                     st.image(reconstructed, caption=f'Score: {score}')
 
-            st.write(f"Search (elapsed) time: {elapsed_time.total_seconds() * 1e3}ms")
-            st.write(f"Reconstruction time: {s_r_s - r_s}s")
+            st.write(f"Search (elapsed) time (ms)", elapsed_time.total_seconds() * 1e3)
+            st.write(f"Reconstruction time (s)", s_r_s - r_s)
             st.write(f"Reconstruction dimensions: 512x512")
 
 
@@ -191,13 +191,13 @@ def web_app_file_store_similar():
                     score = scores[idx]
                     st.image(reconstructed, caption=f'Score: {score}')
 
-            st.write(f"Search (elapsed) time: {elapsed_time.total_seconds() * 1e3}ms")
-            st.write(f"Reconstruction time: {s_r_s - r_s}s")
+            st.write(f"Search (elapsed) time (ms)", elapsed_time.total_seconds() * 1e3)
+            st.write(f"Reconstruction time (s)", s_r_s - r_s)
             st.write(f"Reconstruction dimensions: 512x512")
 
 
 if __name__ == '__main__':
     # web_app()
-    web_app_file_store()
+    # web_app_file_store()
     # web_app_similar()
-    # web_app_file_store_similar()
+    web_app_file_store_similar()

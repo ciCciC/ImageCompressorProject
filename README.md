@@ -19,6 +19,7 @@ In a world of compression without storing original images, latent space represen
 - Similarity
   - Vision Transformer: facebook/dinov2-base
     - model size: 86.6M params
+    - visual feature extractor
   - Cosine
 
 ### 🤗 Hugging Face Spaces
@@ -123,11 +124,7 @@ python app/main.py
 streamlit run webapp.py
 ```
 
-## 📖 DOCS
-
-- http://127.0.0.1:8000/docs
-
-# !!Credits
+# !! Credits
 
 - [madebyollin](https://github.com/madebyollin)
 - 🤗 [Hugging Face](https://github.com/huggingface)

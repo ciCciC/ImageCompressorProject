@@ -19,7 +19,7 @@ class FacebookDinoV2(BaseModel):
         self._processor = AutoImageProcessor.from_pretrained(self.model_id)
         self._model = AutoModel.from_pretrained(self.model_id, use_safetensors=True).to(self.device)
 
-    @torch.no_grad()
+    @torch.inference_mode()
     def get_embeddings(self, images: List[Image.Image]) -> torch.Tensor:
         inputs = self._processor(images=images, return_tensors="pt").to(self.device)
         embeddings = self._model(**inputs).last_hidden_state.mean(dim=1)
