@@ -30,6 +30,10 @@ In a world of compression without storing original images, latent space represen
 ### Preview
 
 <p align='center'>
+  <img width='50%' src="/asset/latents.png">
+</p>
+
+<p align='center'>
   <img width='50%' src="/asset/astronaut.png">
 </p>
 
