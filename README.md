@@ -30,7 +30,7 @@ In a world of compression without storing original images, latent space represen
 ### Preview
 
 <p align='center'>
-<p align="center">Sample of latent representations</p>
+<p align="center">A sample of latent representations</p>
   <img width='50%' src="/asset/latents.png">
 </p>
 
