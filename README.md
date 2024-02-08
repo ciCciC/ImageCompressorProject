@@ -41,6 +41,12 @@ In a world of compression without storing original images, latent space represen
   <img width='50%' src="/asset/similar_latents.png">
 </p>
 
+### Schematic
+
+<p align='center'>
+  <img width='50%' src="/asset/schematic.png">
+
+
 ### Evaluation
 
 | Memory    | n(X) | Q1 MB  | Q2 MB  | Q3  MB | Σ  MB  |

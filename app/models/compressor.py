@@ -102,11 +102,9 @@ class ImageCompressor(BaseModel):
         dim_shift_gpu = self.dimensionalize(latent_vector).to(dtype=self.d_type)
         return to_pil_image(dim_shift_gpu[0])
 
-    def summarize_tensor(self, original: torch.Tensor, decoded: torch.Tensor):
-        mu1 = original.mean(dim=1).flatten()
-        mu2 = decoded.mean(dim=1).flatten()
-        cos = torch.nn.CosineSimilarity(dim=1, eps=1e-6)
-        sim = cos(mu1, mu2)
-
-        return f"\033[34m{str(tuple(x.shape)).ljust(24)}\033[0m (\033[31mmin {x.min().item():+.4f}\033[0m / \033[32mmean {x.mean().item():+.4f}\033[0m / \033[33mmax {x.max().item():+.4f}\033[0m)"
-
+    def summarize_tensor(self, latents: torch.Tensor) -> str:
+        b_ljust = str(tuple(latents.shape)).ljust(24)
+        b_min = latents.min().item()
+        b_mu = latents.mean().item()
+        b_max = latents.max().item()
+        return f"\033[34m{b_ljust}\033[0m (\033[31mmin {b_min:+.4f}\033[0m / \033[32mmean {b_mu:+.4f}\033[0m / \033[33mmax {b_max:+.4f}\033[0m)"
