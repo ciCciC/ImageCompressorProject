@@ -10,7 +10,7 @@ class ImageGenerator(BaseModel):
 
     def __init__(self):
         super().__init__()
-        self.model_id = f'{MODEL_WEIGHTS_DIR}/dreamshaper-7'
+        self.model_id = f'{MODEL_WEIGHTS_DIR}/dreamshaper-8'
 
     def load_model(self):
         self._model = DiffusionPipeline.from_pretrained(self.model_id,
@@ -20,20 +20,19 @@ class ImageGenerator(BaseModel):
         self._optimize()
 
     def _optimize(self):
-        self._model.scheduler = LCMScheduler.from_config(self._model.scheduler.config)
-        self._model.enable_attention_slicing()
+        # self._model.scheduler = LCMScheduler.from_config(self._model.scheduler.config)
+        # self._model.enable_attention_slicing()
 
         self._model = self._model.to(self.device)
 
-        self._model.load_lora_weights("latent-consistency/lcm-lora-sdv1-5")
-        self._model.fuse_lora()
+        # self._model.load_lora_weights("latent-consistency/lcm-lora-sdv1-5")
+        # self._model.fuse_lora()
 
     @torch.inference_mode()
     def inference(self, prompt: str) -> Tuple[List[Image.Image], bool]:
         results = self._model(
             prompt=prompt,
-            num_inference_steps=4,
-            guidance_scale=0.0,
+            num_inference_steps=4
         )
 
         is_nsfw: bool = results.nsfw_content_detected[0]

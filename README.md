@@ -14,6 +14,9 @@ In a world of compression without storing original images, latent space represen
     - VQVAE: pretraining (see notebooks)
     - VAE Tiny: madebyollin/taesd
       - model size: 2.4M params
+    - Stable Diffusion model: Lykon/dreamshaper-8
+      - for generating synthetic data
+      - model size: > 1B params
 - Flavour
     - 8bit latent space
 - Similarity

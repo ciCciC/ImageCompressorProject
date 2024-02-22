@@ -21,7 +21,8 @@ class NeuralService:
     def prompt_inference(self, prompt: str) -> Tuple[np.ndarray, torch.Size, bool]:
         image, is_nsfw = self.generator.inference(prompt)
         latents, shape = self.compressor.compress(image)
-        vectorized = self.compressor.vector_ndarray(latents[0])
+        scaled_latents = self.compressor.scale_latents(latents)
+        vectorized = self.compressor.vector_ndarray(scaled_latents[0])
         return vectorized, shape, is_nsfw
 
     async def prompt_inference_async(self, prompt: str) -> Tuple[np.ndarray, torch.Size, bool]:

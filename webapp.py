@@ -23,12 +23,29 @@ st.write("""
 def inference(prompt: str):
     response: requests.Response = requests.get(f'{BASE_URL}/inference?prompt="{prompt}"')
     body = response.json()
+    st.write(body.keys())
     latents = body['latents']
 
     reconstruction = image_compressor.decompress(latents)
     depiction = image_compressor.depict_latents(latents)
 
     return reconstruction, depiction, response.elapsed
+
+
+def web_app_prompting():
+    example_prompt = 'portrait photo of muscular bearded guy in a worn mech suit, light bokeh, intricate, steel metal, elegant, sharp focus, soft lighting, vibrant colors'
+    prompt = st.text_input('Prompt', placeholder=example_prompt)
+    st.markdown(example_prompt)
+
+    if prompt:
+        start = timer()
+        image, depiction, elapsed_time = inference(prompt)
+        end = timer()
+        st.image([image, depiction], caption=[f'Reconstruction: {image.size}', f'Latents: {depiction.size}'],
+                 clamp=True)
+
+        st.write(f"Elapsed time (ms)", elapsed_time.total_seconds() * 1e3)
+        st.write(f'Overall time (s)', end - start)
 
 
 def get_reconstructed_latents(idx: int):
@@ -72,20 +89,6 @@ def search_reference(latents: List):
     reconstructed_latents = image_compressor.decompress_batch_by_image(latent_space_block)
     reconstructed_images = [to_pil_image(tensor) for tensor in reconstructed_latents]
     return reconstructed_images, scores, response.elapsed
-
-
-def web_app_prompting():
-    prompt = st.text_input('Prompt')
-
-    if prompt:
-        start = timer()
-        image, depiction, elapsed_time = inference(prompt)
-        end = timer()
-        st.image([image, depiction], caption=[f'Reconstruction: {image.size}', f'Latents: {depiction.size}'],
-                 clamp=True)
-
-        st.write(f"Elapsed time (ms)", elapsed_time.total_seconds() * 1e3)
-        st.write(f'Overall time (s)', end - start)
 
 
 def web_app():
@@ -197,6 +200,7 @@ def web_app_file_store_similar():
 
 
 if __name__ == '__main__':
+    # web_app_prompting()
     # web_app()
     # web_app_file_store()
     # web_app_similar()
