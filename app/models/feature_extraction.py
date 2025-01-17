@@ -1,3 +1,16 @@
+"""
+@misc{darcet2024visiontransformersneedregisters,
+      title={Vision Transformers Need Registers},
+      author={Timothée Darcet and Maxime Oquab and Julien Mairal and Piotr Bojanowski},
+      year={2024},
+      eprint={2309.16588},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2309.16588},
+}
+"""
+
+
 from transformers import AutoImageProcessor, AutoModel
 import torch
 from PIL import Image
@@ -11,9 +24,9 @@ class FacebookDinoV2(BaseModel):
         super().__init__()
         self._processor = None
 
-        # facebook/dinov2 model does not support MPS
+        # NOTE: facebook/dinov2-with-registers-large model does not support MPS
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        self.model_id = 'facebook/dinov2-base'
+        self.model_id = 'facebook/dinov2-with-registers-large'
 
     def load_model(self):
         self._processor = AutoImageProcessor.from_pretrained(self.model_id)

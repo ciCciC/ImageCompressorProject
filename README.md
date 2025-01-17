@@ -12,16 +12,16 @@ In a world of compression without storing original images, latent space represen
 
 - Models
     - VQVAE: pretraining (see notebooks)
-    - VAE Tiny: madebyollin/taesd
+    - VAE Tiny: [madebyollin/taesd](https://huggingface.co/madebyollin/taesd)
       - model size: 2.4M params
-    - Stable Diffusion model: Lykon/dreamshaper-8
+    - Stable Diffusion model: [Lykon/dreamshaper-8](https://huggingface.co/Lykon/dreamshaper-8)
       - for generating synthetic data
       - model size: > 1B params
 - Flavour
     - 8bit latent space
 - Similarity
-  - Vision Transformer: facebook/dinov2-base
-    - model size: 86.6M params
+  - Vision Transformer: [facebook/dinov2-with-registers-large](https://huggingface.co/facebook/dinov2-with-registers-large)
+    - model size: 304M params
     - visual feature extractor
   - Cosine
 
